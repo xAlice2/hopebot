@@ -1,3 +1,4 @@
 node_modules
 .env
 /src/commands/utility/uptime.js
+/src/handlers/
