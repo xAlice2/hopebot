@@ -1,11 +1,7 @@
-// necessary discord.js classes
-
 const fs = require("node:fs");
 const path = require("node:path");
 const { Client, Events, GatewayIntentBits, Collection } = require("discord.js");
 require("dotenv").config({ path: ".env" });
-
-// const eventHandler = require('./handlers/eventHandler');
 
 const { readdirSync } = require("node:fs");
 
