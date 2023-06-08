@@ -11,7 +11,7 @@
   "main": "main.js",
   "scripts": {
     "start": "node main.js deploy-commands.js",
-    "dev": "nodemon ./main.js"
+    "dev": "nodemon ./deploy-commands.js ./main.js"
   },
   "keywords": [],
   "author": "",
