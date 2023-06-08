@@ -4,11 +4,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const clientId = process.env.CLIENT_ID;
+const guildId = process.env.SERVER_ID;
 const token = process.env.DISCORD_TOKEN;
-const devGID = process.env.DEV_GID;
-const testGID = process.env.TEST_GID;
-const mrgGID = process.env.MRG_GID;
-
 
 
 
@@ -43,19 +40,8 @@ const rest = new REST().setToken(token);
 		console.log(`Started refreshing ${commands.length} application (/) commands.`);
 
 		// The put method is used to fully refresh all commands in the guild with the current set
-		// "const data = await rest.put( ... " was removed because we're not using this for console logging anyway
-		await rest.put(
-			Routes.applicationGuildCommands(clientId, devGID),
-			{ body: commands },
-		);
-
-		await rest.put(
-			Routes.applicationGuildCommands(clientId, testGID),
-			{ body: commands },
-		);
-
-		await rest.put(
-			Routes.applicationGuildCommands(clientId, mrgGID),
+		const data = await rest.put(
+			Routes.applicationGuildCommands(clientId, guildId),
 			{ body: commands },
 		);
 
@@ -65,6 +51,7 @@ const rest = new REST().setToken(token);
 		console.error(error);
 	}
 })();
+
 
 
 
