@@ -17,8 +17,8 @@ module.exports = {
   async execute(interaction, client) {
     console.log("+++++++++++++++++++++++++++++++++++++++++++++")
     console.log("+")
-    console.log("Updating user data...")
-    console.log(`User data update command run by ${interaction.user.tag} at: ${new Date().toLocaleString()}`);
+    console.log("+ Updating user data...")
+    console.log(`+ User data update command run by ${interaction.user.tag} at: ${new Date().toLocaleString()}`);
     console.log("+")
     console.log("+++++++++++++++++++++++++++++++++++++++++++++")
 
@@ -36,7 +36,7 @@ module.exports = {
       // Fetch data from the API endpoint
       const response = await fetch("https://eiapi-production.up.railway.app/allMaj");
       const data = await response.json();
-      fs.writeFileSync("src/data/maj.json", JSON.stringify(data));
+      fs.writeFileSync("src/data/maj.json", JSON.stringify(data, null, 2));
 
       await interaction.reply("User data updated successfully!");
 
