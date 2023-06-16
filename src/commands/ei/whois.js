@@ -10,7 +10,7 @@ const fs = require("fs");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("whois")
+    .setName("whodis")
     .setDescription("Returns data pertaining to the matched user.")
     .addStringOption((option) =>
       option

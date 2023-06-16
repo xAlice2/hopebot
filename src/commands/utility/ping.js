@@ -8,6 +8,6 @@ module.exports = {
     
     async execute(interaction) {
       const sent = await interaction.reply({ content: 'Pong! :flying_disc:', fetchReply: true });
-      await interaction.editReply(`:ping_pong: PingPong!\n:stopwatch: Uptime: ${Math.round(interaction.client.uptime / 60000)} minutes\n:sparkling_heart: Websocket heartbeat: ${interaction.client.ws.ping}ms.\n:boomerang: Rountrip Latency: ${sent.createdTimestamp - interaction.createdTimestamp}ms`);
+      await interaction.editReply(`:ping_pong: PingPong!\n:stopwatch: Uptime: ${Math.round(interaction.client.uptime / 60000)} minutes\n:sparkling_heart: Websocket heartbeat: ${interaction.client.ws.ping}ms.\n:boomerang: Roundtrip Latency: ${sent.createdTimestamp - interaction.createdTimestamp}ms`);
   },
 };
