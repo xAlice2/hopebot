@@ -6,6 +6,8 @@ const math = require("mathjs");
  * https://mathjs.org/docs/datatypes/units.html
  * 
  *  *Note: scratchpad not supported.
+ * 
+ *  TODO: adjust so that it can handle C & F instead of degC & degF
  */
 
 module.exports = {

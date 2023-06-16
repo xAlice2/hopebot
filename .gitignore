@@ -1,7 +1,11 @@
 node_modules
 .env
-# /src/commands/utility/uptime.js
-/src/commands/ei
+/src/commands/utility/oomcal.js
+/src/commands/ei/minPost.js
+/src/commands/ei/vote.js
 /src/handlers/
+src/data/
+src/graveyard/
 codegraveyard.js
 templates.js
+assets.js
