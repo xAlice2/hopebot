@@ -13,7 +13,7 @@ module.exports = {
       option
         .setName("query")
         .setDescription(
-          'Partial words are acceptable. e.g., "/Jan*" for JaneDoe.'
+          'Partial words are acceptable. e.g., "Jan" for JaneDoe.'
         )
         .setRequired(true)
     ),
