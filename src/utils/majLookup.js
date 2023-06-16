@@ -42,8 +42,8 @@ async function loadMajMemberlist() {
     // Update the member list with the retrieved information
     majMemberlist = newData;
 
-    console.log("Updated Majeggstics Member list");
-    console.log(majMemberlist);
+    console.log("Updated Majeggstics Member list!");
+    // console.log(majMemberlist);
   } catch (error) {
     console.error("Failed to update Majeggstics Member list:", error);
   }

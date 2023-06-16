@@ -16,15 +16,18 @@ module.exports = {
 
   async execute(interaction, client) {
     console.log("+++++++++++++++++++++++++++++++++++++++++++++")
+    console.log("+")
     console.log("Updating user data...")
-    console.log(`Command run by ${interaction.user.tag} at: ${new Date().toLocaleString()}`);
+    console.log(`User data update command run by ${interaction.user.tag} at: ${new Date().toLocaleString()}`);
+    console.log("+")
+    console.log("+++++++++++++++++++++++++++++++++++++++++++++")
 
     // Replace 'YOUR_DISCORD_USER_ID' with your own Discord user ID
     const ownerId = process.env.OWNER_ID;
 
     if (interaction.user.id !== ownerId) {
       return interaction.reply({
-        content: "This command can only be executed by Alice!",
+        content: "Sorry, this command can only be run by Alice.",
         ephemeral: false, 
       });
     }
