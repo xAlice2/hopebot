@@ -22,7 +22,6 @@ module.exports = {
     console.log("+")
     console.log("+++++++++++++++++++++++++++++++++++++++++++++")
 
-    // Replace 'YOUR_DISCORD_USER_ID' with your own Discord user ID
     const ownerId = process.env.OWNER_ID;
 
     if (interaction.user.id !== ownerId) {
@@ -33,7 +32,6 @@ module.exports = {
     }
 
     try {
-      // Fetch data from the API endpoint
       const response = await fetch("https://eiapi-production.up.railway.app/allMaj");
       const data = await response.json();
       fs.writeFileSync("src/data/maj.json", JSON.stringify(data, null, 2));
