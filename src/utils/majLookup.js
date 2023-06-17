@@ -49,7 +49,7 @@ function loadMajMemberlist() {
 //   }
 // }
 
-// loadMajMemberlist();
+loadMajMemberlist();
 
 module.exports = {
   loadMajMemberlist,

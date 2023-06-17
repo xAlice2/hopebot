@@ -1,0 +1,6 @@
+{
+    "discord.removeRemoteRepository": true,
+    "discord.removeDetails": true,
+    "discord.suppressNotifications": true,
+    "discord.enabled": false
+}

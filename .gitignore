@@ -3,6 +3,7 @@ node_modules
 /src/commands/utility/oomcal.js
 /src/commands/ei/minPost.js
 /src/commands/ei/vote.js
+/src/commands/ei/coop.js
 /src/handlers/
 src/data/
 src/graveyard/
