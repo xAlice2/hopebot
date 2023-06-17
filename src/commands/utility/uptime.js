@@ -5,7 +5,7 @@ const {
 } = require("discord.js");
 
 module.exports = {
-  callback: async (interaction) => {
+  callback: async ( Client, interaction) => {
     console.log(`running uptime command`);
 
     const ms = interaction.client.uptime;
