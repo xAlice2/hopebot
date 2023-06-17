@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { MessageEmbed, EmbedBuilder } = require("discord.js");
+const { ApplicationCommandOptionType, EmbedBuilder } = require("discord.js");
+const tools = require("../../utils/tools");
 let { data } = require("../../data/maj.json");
 const {
   convertToLargeNumber,
@@ -9,25 +10,7 @@ const {
 const fs = require("fs");
 
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("whodis")
-    .setDescription("Returns data pertaining to the matched user.")
-    .addStringOption((option) =>
-      option
-        .setName("query")
-        .setDescription(
-          'Partial words are acceptable, case insensitive. e.g., "jan" for JaneDoe.'
-        )
-        .setRequired(true)
-    )
-    .addBooleanOption((option) =>
-      option
-        .setName("ephemeral")
-        .setDescription("Choose whether the response should be ephemeral.")
-    ),
-
-
-  async execute(interaction) {
+  callback: async (client, interaction) => {
     const searchWord = interaction.options.getString("query");
     const isEphemeral = interaction.options.getBoolean("ephemeral") || false;
 
@@ -70,7 +53,7 @@ module.exports = {
 
       matchingEntries.forEach((entry) => {
         const { discordName, ID, IGN, farmerRole, grade, EB } = entry;
-        // const convertedEB = convertToDecimalNumber(EB.toString()).toFixed(2);
+        const convertedEB = tools.EBtoEBWithLetter(EB);
         // console.log(`convertedEB: ${convertedEB}`)
 
         const embed = new EmbedBuilder()
@@ -102,7 +85,7 @@ module.exports = {
             },
             {
               name: "EB",
-              value: `${EB}`,
+              value: `${convertedEB}%`,
             }
           )
 
@@ -123,4 +106,22 @@ module.exports = {
       });
     }
   },
+
+  name: "whois",
+  description: "Returns data pertaining to the matched query.",
+  options: [
+    {
+      name: "query",
+      description:
+        'Partial words are acceptable, case insensitive. e.g., "jan" for JaneDoe.',
+      type: ApplicationCommandOptionType.String,
+      required: true,
+    },
+    {
+      name: "hidden",
+      description: "Choose whether the response should be hidden.",
+      type: ApplicationCommandOptionType.Boolean,
+      required: false,
+    },
+  ],
 };

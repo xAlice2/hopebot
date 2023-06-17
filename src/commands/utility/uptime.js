@@ -1,17 +1,11 @@
 const {
-  SlashCommandBuilder,
-  client,
   Interaction,
   EmbedBuilder,
   PermissionsBitField,
 } = require("discord.js");
 
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("uptime")
-    .setDescription("Replies with bot uptime."),
-
-  async execute(interaction) {
+  callback: async (interaction) => {
     console.log(`running uptime command`);
 
     const ms = interaction.client.uptime;
@@ -25,5 +19,7 @@ module.exports = {
 
     await interaction.reply(`I have been online for: *${uptime}*`);
   },
-};
 
+  name: "uptime",
+  description: "Replies with bot uptime.",
+};

@@ -4,7 +4,7 @@ node_modules
 /src/commands/ei/minPost.js
 /src/commands/ei/vote.js
 /src/commands/ei/coop.js
-/src/handlers/
+# /src/handlers/
 src/data/
 src/graveyard/
 codegraveyard.js

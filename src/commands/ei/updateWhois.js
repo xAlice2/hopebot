@@ -1,20 +1,14 @@
 // const { REST } = require("@discordjs/rest");
 // const { Routes } = require("discord-api-types/v9");
-const { SlashCommandBuilder } = require("@discordjs/builders");
+// const { SlashCommandBuilder } = require("@discordjs/builders");
+const { ApplicationCommandOptionType, } = require("discord.js");
 const fs = require("fs");
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 
-/**
- *  Template
- */
 
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("updatewhois")
-    .setDescription("Updates the list of users currently in the group."),
-
-  async execute(interaction, client) {
+  callback: async (client, interaction) => {
     console.log("+++++++++++++++++++++++++++++++++++++++++++++")
     console.log("+")
     console.log("+ Updating user data...")
@@ -46,4 +40,8 @@ module.exports = {
       });
     }
   },
+
+
+  name: "updatewhois",
+  description: "Returns data pertaining to the matched query.",
 };
