@@ -2,11 +2,6 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { ApplicationCommandOptionType, EmbedBuilder } = require("discord.js");
 const tools = require("../../utils/tools");
 let { data } = require("../../data/maj.json");
-const {
-  convertToLargeNumber,
-  convertToDecimalNumber,
-} = require("../../utils/countDigits.js");
-
 const fs = require("fs");
 
 module.exports = {
@@ -51,9 +46,9 @@ module.exports = {
         return;
       }
 
-      matchingEntries.forEach((entry) => {
+      matchingEntries.forEach(async (entry) => {
         const { discordName, ID, IGN, farmerRole, grade, EB } = entry;
-        const convertedEB = tools.EBtoEBWithLetter(EB);
+        // const convertedEB = tools.EBtoEBWithLetter(EB);
         // console.log(`convertedEB: ${convertedEB}`)
 
         const embed = new EmbedBuilder()
@@ -85,7 +80,7 @@ module.exports = {
             },
             {
               name: "EB",
-              value: `${convertedEB}%`,
+              value: `${await tools.EBtoEBWithLetter(EB)}`,
             }
           )
 
