@@ -80,7 +80,7 @@ module.exports = {
             },
             {
               name: "EB",
-              value: `${await tools.EBtoEBWithLetter(EB)}`,
+              value: `${await tools.EBtoEBWithLetter(EB)}%`,
             }
           )
 
@@ -92,7 +92,7 @@ module.exports = {
           })
           .setTimestamp();
 
-        interaction.reply({ embeds: [embed], ephemeral: isEphemeral });
+        interaction.reply({ embeds: [embed], ephemeral: interaction.options.get('hidden') ? interaction.options.get('hidden').value : false });
       });
     } catch (error) {
       console.error(error);
