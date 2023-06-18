@@ -109,7 +109,7 @@ module.exports = {
     }
   },
 
-  name: "whois",
+  name: "whodis",
   description: "Returns data pertaining to the matched query.",
   options: [
     {
