@@ -33,16 +33,14 @@ module.exports = {
           `No matching entries found for \`${searchWord}\`.`
         );
         return;
-      }
-
-      if (matchingEntries.length > 3) {
+      } else if (matchingEntries.length > 3) {
         const count = matchingEntries.length;
 
         await interaction.reply(
           `Too many entries found (${count}) for \`${searchWord}\`. Please refine your search.`
         );
         return;
-      } else if (matchingEntries.length <= 3) {
+      } else if (matchingEntries.length > 1) {
         const entriesList = matchingEntries
           .map((entry) => `${entry.discordName} - ${entry.IGN}`)
           .join("\n* ");
@@ -51,7 +49,7 @@ module.exports = {
           `*Multiple entries found, please refine your search. (Discord name - IGN):* \n* ${entriesList}`
         );
         return;
-      }
+      } 
 
       matchingEntries.forEach(async (entry) => {
         const { discordName, ID, IGN, farmerRole, grade, EB } = entry;
