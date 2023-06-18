@@ -35,13 +35,20 @@ module.exports = {
         return;
       }
 
-      if (matchingEntries.length > 1) {
-        const entriesList = matchingEntries
-          .map((entry) => `${entry.discordName} - ${entry.IGN}`)
-          .join("\n");
+      if (matchingEntries.length > 3) {
+        const count = matchingEntries.length;
 
         await interaction.reply(
-          `*Multiple entries found, please refine your search.*\n${entriesList}`
+          `Too many entries found (${count}) for \`${searchWord}\`. Please refine your search.`
+        );
+        return;
+      } else if (matchingEntries.length <= 3) {
+        const entriesList = matchingEntries
+          .map((entry) => `${entry.discordName} - ${entry.IGN}`)
+          .join("\n* ");
+
+        await interaction.reply(
+          `*Multiple entries found, please refine your search. (Discord name - IGN):* \n* ${entriesList}`
         );
         return;
       }
@@ -92,7 +99,7 @@ module.exports = {
           })
           .setTimestamp();
 
-        interaction.reply({ embeds: [embed], ephemeral: interaction.options.get('hidden') ? interaction.options.get('hidden').value : false });
+        await interaction.reply({ embeds: [embed], ephemeral: isEphemeral });
       });
     } catch (error) {
       console.error(error);

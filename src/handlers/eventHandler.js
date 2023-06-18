@@ -17,4 +17,8 @@ module.exports = (client) => {
       }
     });
   }
+
+  client.on('ready', () => {
+    console.log(`Ready! Logged in as ${client.user.tag}`);
+  });
 };
