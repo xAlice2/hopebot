@@ -74,26 +74,31 @@ module.exports = {
               inline: true,
             },
             {
-              name: "Grade",
-              value: `${grade.toUpperCase()}`,
-              inline: false,
-            },
-            {
               name: "Farmer Role",
               value: `${farmerRole}`,
-              inline: true,
+              inline: false,
             },
             {
               name: "EB",
               value: `${await tools.EBtoEBWithLetter(EB)}%`,
-            }
+              inline: false,
+            },
+            {
+              name: "Grade",
+              value: `${grade.toUpperCase()}`,
+              inline: false,
+            },
+            // {
+            //   name: "EB",
+            //   value: `${await tools.EBtoEBWithLetter(EB)}%`,
+            // }
           )
 
           .setThumbnail("https://i.imgur.com/2Fo1vQd.png")
           .setColor("#ffc800")
           .setFooter({
             text: `${interaction.user.username}`,
-            iconURL: "https://i.imgur.com/cjcaNo0.png",
+            iconURL: "https://i.imgur.com/gL8tTYn.png",
           })
           .setTimestamp();
 
