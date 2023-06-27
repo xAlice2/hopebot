@@ -9,6 +9,8 @@ module.exports = (directory, foldersOnly = false) => {
   for (const file of files) {
     const filePath = path.join(directory, file.name);
 
+    if (file.name.match(/^\./)) continue; // No hidden folders/files
+
     if (foldersOnly) {
       if (file.isDirectory()) {
         fileNames.push(filePath);

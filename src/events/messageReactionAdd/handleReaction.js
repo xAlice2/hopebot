@@ -17,7 +17,7 @@ module.exports = async (client, ...msgreaction) => {
 	}
 
     try{
-        // if (!tools.isLeader(user.id)) return;
+        if (!tools.isLeader(user.id)) return;
 
         
         if(reaction.emoji.name == '📝'){

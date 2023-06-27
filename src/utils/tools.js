@@ -1,57 +1,204 @@
 const callKev = require("./callKev");
-// var contract = require('../schemas/contract')
-// var kevID = require('../schemas/kevID')
-// const { alias } = require('../schemas/contribution')
+var contract = require("../schemas/contract");
+var kevID = require("../schemas/kevID");
+const { alias } = require("../schemas/contribution");
+const User = require("../schemas/user");
 var allKevIDs = [];
 
-// async function fetchGroup(interaction) {
-//     var groupSchema = require('../schemas/group')
-//     var userSchema = require('../schemas/user')
+async function fetchGroup(interaction) {
+  var groupSchema = require("../schemas/group");
+  var userSchema = require("../schemas/user");
 
-//     var channelID
-//     if (interaction.channel.isThread()) channelID = interaction.channel.parentId
-//     else channelID = interaction.channelId
+  var channelID;
+  if (interaction.channel.isThread()) channelID = interaction.channel.parentId;
+  else channelID = interaction.channelId;
 
-//     if (['734424049085710366', '850486132713455616', '830024046867513414', '1117142969389166792'].includes(channelID)) {
-//         let user = await userSchema.findOne({ ID: interaction.user.id })
-//         if (!user || user.group == "none") return null
+  if (
+    [
+      "734424049085710366",
+      "850486132713455616",
+      "830024046867513414",
+      "1117142969389166792",
+    ].includes(channelID)
+  ) {
+    let user = await userSchema.findOne({ ID: interaction.user.id });
+    if (!user || user.group == "none") return null;
 
-//         return await groupSchema.findOne({ name: user.group })
-//     } else {
-//         var groups = await groupSchema.find()
-//         for (var group of groups) {
-//             if (JSON.stringify(group).includes(channelID)) {
-//                 return group
-//             }
-//         }
-//         return null
+    return await groupSchema.findOne({ name: user.group });
+  } else {
+    var groups = await groupSchema.find();
+    for (var group of groups) {
+      if (JSON.stringify(group).includes(channelID)) {
+        return group;
+      }
+    }
+    return null;
+  }
+}
+
+async function updateUsersWithProgress(userData, loadingMessage) {
+  try {
+    let completedUsers = 0; // Initialize the completed users count
+
+    const bulkOperations = []; // Array to store bulk operations
+
+    for (const userObj of userData) {
+      const filter = { ID: userObj.ID };
+
+      // Update the user document with the new data
+      const update = {
+        $set: {
+          group: userObj.group,
+          ID: userObj.ID,
+          IGN: userObj.IGN,
+          discordName: userObj.discordName,
+          displayName: userObj.displayName,
+          farmerRole: userObj.farmerRole,
+          EB: userObj.EB,
+          SE: userObj.SE,
+          PE: userObj.PE,
+          grade: userObj.grade,
+          active: userObj.active,
+          statusUntil: userObj.statusUntil,
+          willPlay: userObj.willPlay,
+        },
+      };
+
+      const operation = { updateOne: { filter, update, upsert: true } };
+      bulkOperations.push(operation);
+
+      completedUsers++; // Increment the completed users count
+
+      // Update the loading bar and progress at a specified interval
+      if (completedUsers % 100 === 0) {
+        const progress = calculateProgress(userData.length, completedUsers);
+        const loadingBar = generateLoadingBar(progress);
+        await loadingMessage.edit(`${loadingBar}`);
+      }
+    }
+
+    // Execute the bulk operations
+    if (bulkOperations.length > 0) {
+      await User.bulkWrite(bulkOperations);
+    }
+
+    await loadingMessage.edit(`All user data successfully updated!`);
+  } catch (error) {
+    console.error("Failed to update user data:", error);
+  }
+}
+
+// async function updateUsersWithProgress(userData, loadingMessage) {
+//   try {
+//     let completedUsers = 0; // Initialize the completed users count
+
+//     for (const userObj of userData) {
+//       // Find the user document by ID
+//       const user = await User.findOne({ ID: userObj.ID });
+
+//       if (user) {
+//         // Update the existing user document with the new data
+//         user.group = userObj.group;
+//         user.ID = userObj.ID;
+//         user.IGN = userObj.IGN;
+//         user.discordName = userObj.discordName;
+//         user.displayName = userObj.displayName;
+//         user.farmerRole = userObj.farmerRole;
+//         user.EB = userObj.EB;
+//         user.SE = userObj.SE;
+//         user.PE = userObj.PE;
+//         user.grade = userObj.grade;
+//         user.active = userObj.active;
+//         user.statusUntil = userObj.statusUntil;
+//         user.willPlay = userObj.willPlay;
+
+//         await user.save();
+//         console.log(`Updated user: ${user.ID}`);
+//       } else {
+//         // Create a new user document if it doesn't exist
+//         const newUser = new User(userObj);
+//         await newUser.save();
+//         console.log(`Created new user: ${newUser.ID}`);
+//       }
+
+//       completedUsers++; // Increment the completed users count
+
+//       // Update the loading bar based on progress
+//       const progress = calculateProgress(userData.length, completedUsers);
+//       const loadingBar = generateLoadingBar(progress);
+//       await loadingMessage.edit(`${loadingBar}`);
+
+//       // console.log("User data updated successfully in MongoDB");
 //     }
+//   } catch (error) {
+//     console.error("Failed to update user data:", error);
+//   }
 // }
 
-// async function isLeader(userID, group) {
-//     var groupSchema = require('../schemas/group')
-//     var groups
-//     if (group)
-//         groups = await groupSchema.find({ name: group.name, leaderIDs: userID }).exec()
-//     else
-//         groups = await groupSchema.find({ leaderIDs: userID }).exec()
-//     return groups.length
-// }
+function generateLoadingBar(progress) {
+  const quarterNotStarted = ":rooster:";
+  const quarterInProgress = ":fire:";
+  const quarterCompleted = ":poultry_leg:";
 
-// async function calculateEB(backup) {
-//     var pe = backup.game.eggsOfProphecy
-//     var se = backup.game.soulEggsD
-//     var pe_bonus = 0, se_bonus = 0
-//     for (const item in backup.game.epicResearch) {
-//         if (backup.game.epicResearch[item].id == 'prophecy_bonus') {
-//             pe_bonus = backup.game.epicResearch[item].level * 0.01
-//         }
-//         if (backup.game.epicResearch[item].id == 'soul_eggs') {
-//             se_bonus = backup.game.epicResearch[item].level
-//         }
-//     }
-//     return se * ((10 + se_bonus) * (1.05 + pe_bonus) ** pe)
-// }
+  const totalQuarters = 4;
+  const quarterProgress = Math.floor(progress * totalQuarters);
+
+  let loadingBar = "";
+
+  // Add completed quarters
+  for (let i = 0; i < quarterProgress; i++) {
+    loadingBar += quarterCompleted + " ";
+  }
+
+  // Add in-progress quarter
+  if (quarterProgress < totalQuarters) {
+    loadingBar += quarterInProgress + " ";
+  }
+
+  // Add remaining quarters
+  const remainingQuarters = totalQuarters - quarterProgress - 1;
+  if (remainingQuarters > 0) {
+    loadingBar += quarterNotStarted.repeat(remainingQuarters);
+  }
+
+  return loadingBar;
+}
+
+function calculateProgress(totalUsers, completedUsers) {
+  // Calculate the progress based on completed users
+  if (totalUsers === 0) {
+    return 0; // No progress if there are no users
+  }
+
+  return completedUsers / totalUsers;
+}
+
+async function isLeader(userID, group) {
+  var groupSchema = require("../schemas/group");
+  var groups;
+  if (group)
+    groups = await groupSchema
+      .find({ name: group.name, leaderIDs: userID })
+      .exec();
+  else groups = await groupSchema.find({ leaderIDs: userID }).exec();
+  return groups.length;
+}
+
+async function calculateEB(backup) {
+  var pe = backup.game.eggsOfProphecy;
+  var se = backup.game.soulEggsD;
+  var pe_bonus = 0,
+    se_bonus = 0;
+  for (const item in backup.game.epicResearch) {
+    if (backup.game.epicResearch[item].id == "prophecy_bonus") {
+      pe_bonus = backup.game.epicResearch[item].level * 0.01;
+    }
+    if (backup.game.epicResearch[item].id == "soul_eggs") {
+      se_bonus = backup.game.epicResearch[item].level;
+    }
+  }
+  return se * ((10 + se_bonus) * (1.05 + pe_bonus) ** pe);
+}
 
 async function EBtoRole(EB) {
   let power = -1;
@@ -102,7 +249,7 @@ async function EBtoRole(EB) {
   return roles[power];
 }
 
-async function EBtoEBWithLetter(EB) {
+function EBtoEBWithLetter(EB, strLen) {
   var letters = {
     0: "",
     3: "k",
@@ -121,6 +268,10 @@ async function EBtoEBWithLetter(EB) {
     42: "Td",
   };
 
+  if (EB < 0) return "-" + EBtoEBWithLetter(-EB, strLen);
+
+  if (EB < 1000) return EB.toFixed(3);
+
   let power = 0;
   while (EB >= 10) {
     EB /= 10;
@@ -131,7 +282,8 @@ async function EBtoEBWithLetter(EB) {
     power--;
   }
 
-  return String(EB.toFixed(3)) + letters[power];
+  if (strLen) return String(EB.toFixed(3)).slice(0, strLen) + letters[power];
+  else return String(EB.toFixed(3)) + letters[power];
 }
 
 async function convertGrade(grade) {
@@ -328,18 +480,19 @@ async function eggToEmoji(egg) {
 // }
 
 module.exports = {
+  updateUsersWithProgress,
   EBtoRole,
   EBtoEBWithLetter,
   convertGrade,
   timeDifference,
   eggToEmoji,
-//   fetchGroup,
-//   isLeader,
-//   calculateEB,
-//   addNewContract,
-//   generateAutomaticAliases,
-//   timestampToContractDay,
-//   getAutocompleteKevIDs,
-//   setAutocompleteKevIDs,
-//   hasUserCompletedContract,
+  //   fetchGroup,
+  isLeader,
+  calculateEB,
+  //   addNewContract,
+  //   generateAutomaticAliases,
+  //   timestampToContractDay,
+  //   getAutocompleteKevIDs,
+  //   setAutocompleteKevIDs,
+  //   hasUserCompletedContract,
 };
