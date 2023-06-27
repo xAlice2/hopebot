@@ -5,6 +5,7 @@ module.exports = {
   callback: async (client, interaction) => {
     const searchWord = interaction.options.getString("query").toLowerCase();
     const isEphemeral = interaction.options.getBoolean("hidden") || false;
+    const exactMatch = interaction.options.getBoolean("exact") || false;
 
     if(searchWord.startsWith("secretsay ")) {
       await interaction.reply({ content: '\u200b', ephemeral: true}).then(async () => await interaction.deleteReply())
@@ -34,7 +35,15 @@ module.exports = {
             $options: "i",
           },
         },
-      ],
+        exactMatch && {
+            $or: [
+              { discordName: searchWord },
+              { IGN: searchWord },
+              { ID: searchWord },
+            ],
+          },
+
+      ].filter(Boolean), // Remove any undefined/null conditions
     });
 
     console.log(`++++++++++++++++++++++++++++++++++++++++++++++`);
@@ -151,6 +160,12 @@ module.exports = {
       type: ApplicationCommandOptionType.String,
       required: true,
     },
+    {
+        name: "exact",
+        description: "Perform an exact match search (case insensitive).",
+        type: ApplicationCommandOptionType.Boolean,
+        required: false,
+      },
     {
       name: "hidden",
       description: "Choose whether the response should be hidden.",
