@@ -54,6 +54,6 @@ module.exports = {
     }
   },
 
-  name: "updateusers",
+  name: "updatewhois",
   description: "Updates the user database. Restricted command.",
 };
