@@ -7,16 +7,20 @@ module.exports = {
     const isEphemeral = interaction.options.getBoolean("hidden") || false;
     const exactMatch = interaction.options.getBoolean("exact") || false;
 
-    if(searchWord.startsWith("secretsay ")) {
-      await interaction.reply({ content: '\u200b', ephemeral: true}).then(async () => await interaction.deleteReply())
-      await interaction.channel.send(interaction.options.getString("query").slice("secretsay ".length))
-      return
+    if (searchWord.startsWith("secretsay ")) {
+      await interaction
+        .reply({ content: "\u200b", ephemeral: true })
+        .then(async () => await interaction.deleteReply());
+      await interaction.channel.send(
+        interaction.options.getString("query").slice("secretsay ".length)
+      );
+      return;
     }
 
     const user = require("../../schemas/user");
     const groupSchema = require("../../schemas/group");
-    const matchingEntries = await user.find({
-      $or: [
+
+    let queryConditions = [
         {
           discordName: {
             $regex: `${searchWord}.*`,
@@ -35,16 +39,25 @@ module.exports = {
             $options: "i",
           },
         },
-        exactMatch && {
-            $or: [
-              { discordName: searchWord },
-              { IGN: searchWord },
-              { ID: searchWord },
-            ],
+      ];
+  
+      if (exactMatch) {
+        queryConditions = [
+          {
+            discordName: searchWord,
           },
-
-      ].filter(Boolean), // Remove any undefined/null conditions
-    });
+          {
+            IGN: searchWord,
+          },
+          {
+            ID: searchWord,
+          },
+        ];
+      }
+  
+      const matchingEntries = await user.find({
+        $or: queryConditions.filter(Boolean), 
+      });
 
     console.log(`++++++++++++++++++++++++++++++++++++++++++++++`);
     console.log(`Lookup command results:`);
@@ -75,15 +88,16 @@ module.exports = {
         await interaction.reply({
           content: `*Multiple entries found, please refine your search. (Discord name - IGN):* \n* ${entriesList}`,
           ephemeral: isEphemeral,
-      });
+        });
         return;
       }
 
       matchingEntries.forEach(async (entry) => {
-        const { group, discordName, ID, IGN, farmerRole, grade, EB, SE, PE } = entry;
+        const { group, discordName, ID, IGN, farmerRole, grade, EB, SE, PE } =
+          entry;
 
-        const mainChannel = await groupSchema.findOne({ name: group })
-        const channelName = mainChannel ? mainChannel.channelName : "Unknown"
+        const mainChannel = await groupSchema.findOne({ name: group });
+        const channelName = mainChannel ? mainChannel.channelName : "Unknown";
 
         const embed = new EmbedBuilder()
           .setTitle("Search Results")
@@ -120,7 +134,7 @@ module.exports = {
             {
               name: "PE",
               value: String(PE),
-              inline: true
+              inline: true,
             },
             {
               name: "Grade",
@@ -161,11 +175,11 @@ module.exports = {
       required: true,
     },
     {
-        name: "exact",
-        description: "Perform an exact match search (case insensitive).",
-        type: ApplicationCommandOptionType.Boolean,
-        required: false,
-      },
+      name: "exact",
+      description: "Perform an exact match search (case insensitive).",
+      type: ApplicationCommandOptionType.Boolean,
+      required: false,
+    },
     {
       name: "hidden",
       description: "Choose whether the response should be hidden.",
